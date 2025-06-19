@@ -1,0 +1,1 @@
+# This file makes the 'newworld_config_manager' directory a Python package.

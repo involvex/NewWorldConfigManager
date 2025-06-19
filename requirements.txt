@@ -1,0 +1,3 @@
+PyQt6
+lxml
+# Add other dependencies here as your project grows
