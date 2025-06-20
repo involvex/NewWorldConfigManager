@@ -128,8 +128,6 @@ NeWWorld-Config-Manager/
     *   The application primarily looks for the standard Windows path (`%APPDATA%/AGS/New World`). If your configuration is in a non-standard location (e.g., due to Proton on Linux, or a custom install), the tool might not find it automatically. Future versions may allow manual path specification.
 *   **"Failed to parse usersettings.javsave as XML":**
     *   While `usersettings.javsave` often contains XML-like data, it might not always be perfectly valid XML or could be corrupted. If parsing fails, you might not be able to edit it with this tool. Restoring from a game backup or an older backup made by this tool might help.
-*   **Application Icon Not Showing:**
-    *   Ensure the `logo.png` file is correctly placed at `newworld_config_manager/ui/assets/logo.png`.
 
 ## Disclaimer
 
