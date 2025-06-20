@@ -6,6 +6,19 @@
 
 **New World Config Manager** is a desktop application created by Involvex, designed to help you easily manage, edit, backup, and restore your New World game configuration files. It provides a user-friendly interface for handling complex XML settings, including key rebindings and various user preferences like UI colors.
 
+## Table of Contents
+
+*   [Features](#features)
+*   [Screenshots](#screenshots)
+*   [Requirements](#requirements)
+*   [Installation & Setup](#installation--setup)
+*   [How to Use](#how-to-use)
+*   [File Structure](#file-structure)
+*   [Troubleshooting](#troubleshooting)
+*   [Disclaimer](#disclaimer)
+*   [Contributing](#contributing)
+*   [License](#license)
+
 ## Features
 
 *   **User-Friendly GUI:** Intuitive interface built with PyQt6 for managing complex XML configurations.
@@ -29,11 +42,13 @@
 
 ## Screenshots
 
-*(It's highly recommended to add a few screenshots here to showcase the application!)*
+> **Note:** It's highly recommended to add a few screenshots here to showcase the application!
+>
+> *   Example: Main window of the application.
+> *   Example: Editing key rebindings.
+> *   Example: Editing user settings, showing the color editor.
 
-*   Example: Main window of the application.
-*   Example: Editing key rebindings.
-*   Example: Editing user settings, showing the color editor.
+---
 
 ## Requirements
 
@@ -119,15 +134,19 @@ NeWWorld-Config-Manager/
 
 ## Disclaimer
 
-Modifying game configuration files can potentially lead to unexpected behavior if not done carefully. While this tool aims to provide a safe way to manage these settings, always consider backing up your settings before making significant changes. The "Backup Settings Now" feature is provided for this purpose. Use this tool at your own risk.
+> **Important:** Modifying game configuration files can potentially lead to unexpected behavior if not done carefully. While this tool aims to provide a safe way to manage these settings, always consider backing up your settings before making significant changes. The "Backup Settings Now" feature is provided for this purpose. Use this tool at your own risk.
+
+---
 
 ## Contributing
 
-Contributions, issues, and feature requests are welcome! Feel free to check issues page (if you have one).
+Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/involvex/NeWWorld-Config-Manager/issues).
+
+---
 
 ## License
 
-This project is open source. Please add a `LICENSE` file to specify the terms under which it is shared (e.g., MIT, GPL, Apache 2.0).
+This project is open source. Please add a `LICENSE` file (e.g., MIT, GPL, Apache 2.0) to specify the terms under which it is shared.
 
 ---
 
