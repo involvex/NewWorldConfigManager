@@ -1,7 +1,7 @@
 # New World Config Manager
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/involvex/NeWWorld-Config-Manager/main/newworld_config_manager/ui/assets/logo.png" alt="New World Config Manager Logo" width="150"/>
+  <img src="newworld_config_manager/ui/assets/logo.png" alt="New World Config Manager Logo" width="150"/>
 </p>
 
 **New World Config Manager** is a desktop application created by Involvex, designed to help you easily manage, edit, backup, and restore your New World game configuration files. It provides a user-friendly interface for handling complex XML settings, including key rebindings and various user preferences like UI colors.
