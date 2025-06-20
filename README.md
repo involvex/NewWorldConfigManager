@@ -110,8 +110,7 @@
 NeWWorld-Config-Manager/
 ├── newworld_config_manager/    # Main application package
 │   ├── ui/                     # UI related files (widgets, assets)
-│   │   ├── assets/
-│   │   │   └── logo.png        # Application logo
+│   │   ├── assets/             # Image assets, etc.
 │   │   └── __init__.py
 │   ├── __init__.py
 │   ├── config_parser.py        # Logic for finding, loading, saving, backing up configs
