@@ -59,8 +59,8 @@
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/involvex/NeWWorld-Config-Manager.git
-    cd NeWWorld-Config-Manager
+    git clone https://github.com/involvex/NewWorldConfigManager.git
+    cd NewWorldConfigManager
     ```
 
 2.  **Install dependencies:**
@@ -140,13 +140,13 @@ NeWWorld-Config-Manager/
 
 ## Contributing
 
-Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/involvex/NeWWorld-Config-Manager/issues).
+Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/involvex/NewWorldConfigManager/issues).
 
 ---
 
 ## License
 
-This project is open source. Please add a `LICENSE` file (e.g., MIT, GPL, Apache 2.0) to specify the terms under which it is shared.
+This project is licensed under the MIT License - see the LICENSE file for details.
 
 ---
 
