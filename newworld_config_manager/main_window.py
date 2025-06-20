@@ -8,6 +8,7 @@ from PyQt6.QtGui import QFont, QColor, QPixmap, QIcon
 from .config_parser import ConfigParser
 from pathlib import Path # Ensure Path is imported
 import xml.etree.ElementTree as ET # For type hinting and working with XML elements
+import shutil # For restore from backup
 
 class MainWindow(QMainWindow):
     class ColorEditorWidget(QWidget):
@@ -68,7 +69,7 @@ class MainWindow(QMainWindow):
 
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("NeWWorld-Config-Manager")
+        self.setWindowTitle("New World Config Manager - by Involvex")
         self.setGeometry(100, 100, 800, 600)  # Increased size for tree view
 
         self.config_parser = ConfigParser()
@@ -87,12 +88,25 @@ class MainWindow(QMainWindow):
         # Main vertical layout for the central widget
         main_layout = QVBoxLayout(self.central_widget)
 
-        self.label = QLabel("Welcome to NeWWorld Config Manager!")
-        self.label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        main_layout.addWidget(self.label)
+        # Status bar
+        self.statusBar = self.statusBar()
+        self.status_label = QLabel("Welcome to New World Config Manager!") # For dynamic messages
+        self.statusBar.addWidget(self.status_label, 1) # Stretch factor 1
+
+        self.created_by_label = QLabel("Created by Involvex")
+        self.created_by_label.setAlignment(Qt.AlignmentFlag.AlignRight)
+        self.statusBar.addPermanentWidget(self.created_by_label)
+
+        self.action_status_label = QLabel("Load a configuration file to begin.") # For persistent status like loaded file
+        self.action_status_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        font = self.action_status_label.font()
+        font.setPointSize(font.pointSize() + 1) # Slightly larger
+        self.action_status_label.setFont(font)
+        main_layout.addWidget(self.action_status_label)
 
         # Horizontal layout for buttons
         button_layout = QHBoxLayout()
+        button_layout.setSpacing(10) # Add spacing between buttons
         self.load_rebindings_button = QPushButton("Load Rebindings Config")
         self.load_rebindings_button.clicked.connect(self.handle_load_rebindings)
         button_layout.addWidget(self.load_rebindings_button)
@@ -296,7 +310,8 @@ class MainWindow(QMainWindow):
         
         temp_rebindings_filepath = self.config_parser._find_latest_rebindings_file()
         if not temp_rebindings_filepath:
-            self.label.setText("Failed to find rebindings XML file.")
+            self.status_label.setText("Failed to find rebindings XML file.")
+            self.action_status_label.setText("Could not load rebindings.")
             self.config_tree_widget.clear()
             self.config_tree_widget.setColumnCount(2)
             self.config_tree_widget.setHeaderLabels(["Name", "Value"])
@@ -307,19 +322,21 @@ class MainWindow(QMainWindow):
             self.current_rebindings_root = None
             self.current_rebindings_filepath = None
             return
-
+        
         rebindings_data_root = self.config_parser.load_xml_config(temp_rebindings_filepath)
 
         if rebindings_data_root is not None:
             self.current_rebindings_filepath = temp_rebindings_filepath
             self.current_rebindings_root = rebindings_data_root
-            self.label.setText(f"Rebindings XML loaded from {Path(self.current_rebindings_filepath).name}!")
+            self.action_status_label.setText(f"Rebindings loaded: {Path(self.current_rebindings_filepath).name}")
+            self.status_label.setText("Rebindings XML loaded successfully!")
             self._populate_rebindings_tree(rebindings_data_root)
             self.save_button.setEnabled(True) # Enable save button
             self.changes_made_in_current_config = False
             self.reset_changes_button.setEnabled(False)
         else:
-            self.label.setText(f"Failed to load rebindings XML from {Path(temp_rebindings_filepath).name}.")
+            self.status_label.setText(f"Failed to load rebindings XML from {Path(temp_rebindings_filepath).name}.")
+            self.action_status_label.setText("Failed to load rebindings.")
             self.config_tree_widget.clear() # Clear tree on failure
             self.config_tree_widget.setColumnCount(2) # Reset to default if needed
             self.config_tree_widget.setHeaderLabels(["Name", "Value"])
@@ -350,44 +367,51 @@ class MainWindow(QMainWindow):
         self.current_rebindings_filepath = None
         self.item_id_to_rebind_element.clear()
 
-        result = self.config_parser.load_user_settings_config()
         self.config_tree_widget.clear() # Clear tree if showing other data
         self.item_id_to_usersetting_element.clear() # Clear previous mapping
         self.config_tree_widget.setColumnCount(2) # Reset to default columns
         self.config_tree_widget.setHeaderLabels(["Name", "Value"]) # Generic headers for XML
 
-        if result:
-            javsave_path, root_element = result
-            self.current_usersettings_filepath = javsave_path # Store path even if root is None
-            if root_element is not None:
-                self.label.setText(f"Successfully parsed {Path(javsave_path).name} as XML.")
-                self.current_usersettings_root = root_element
-                self._populate_generic_xml_tree(self.config_tree_widget, root_element)
-                self.config_tree_widget.setColumnWidth(0, 250) # Name column
-                self.config_tree_widget.setColumnWidth(1, 350) # Value column (for sliders)
-                self.config_tree_widget.expandToDepth(1)
-                self.save_button.setEnabled(True) # Enable save for user settings
-                self.changes_made_in_current_config = False
-                self.reset_changes_button.setEnabled(False)
+        self.config_tree_widget.blockSignals(True)
+        try:
+            result = self.config_parser.load_user_settings_config()
+            if result:
+                javsave_path, root_element = result
+                self.current_usersettings_filepath = javsave_path # Store path even if root is None
+                if root_element is not None:
+                    self.action_status_label.setText(f"User Settings loaded: {Path(javsave_path).name}")
+                    self.status_label.setText(f"Successfully parsed {Path(javsave_path).name} as XML.")
+                    self.current_usersettings_root = root_element
+                    self._populate_generic_xml_tree(self.config_tree_widget, root_element)
+                    self.config_tree_widget.setColumnWidth(0, 250) # Name column
+                    self.config_tree_widget.setColumnWidth(1, 350) # Value column (for sliders)
+                    self.config_tree_widget.expandToDepth(1)
+                    self.save_button.setEnabled(True) # Enable save for user settings
+                    self.changes_made_in_current_config = False
+                    self.reset_changes_button.setEnabled(False)
+                else:
+                    self.status_label.setText(f"Found {Path(javsave_path).name}, but failed to parse as XML. See console.")
+                    self.action_status_label.setText(f"Error parsing {Path(javsave_path).name}.")
+                    # Optionally display the path or an error message in the tree
+                    error_item = QTreeWidgetItem(self.config_tree_widget)
+                    error_item.setText(0, "Error")
+                    error_item.setText(1, f"Could not parse {Path(javsave_path).name} as XML.")
+                    self.save_button.setEnabled(False)
+                    self.changes_made_in_current_config = False
+                    self.reset_changes_button.setEnabled(False)
+                    self.current_usersettings_root = None
+                    # self.current_usersettings_filepath is already set
             else:
-                self.label.setText(f"Found {Path(javsave_path).name}, but failed to parse as XML. See console.")
-                # Optionally display the path or an error message in the tree
-                error_item = QTreeWidgetItem(self.config_tree_widget)
-                error_item.setText(0, "Error")
-                error_item.setText(1, f"Could not parse {Path(javsave_path).name} as XML.")
+                self.status_label.setText("usersettings.javsave not found or could not be processed.")
+                self.action_status_label.setText("Could not load user settings.")
+                QMessageBox.information(self, "Load User Settings", "Could not find usersettings.javsave. Check console for details.")
                 self.save_button.setEnabled(False)
                 self.changes_made_in_current_config = False
                 self.reset_changes_button.setEnabled(False)
                 self.current_usersettings_root = None
-                # self.current_usersettings_filepath is already set
-        else:
-            self.label.setText("usersettings.javsave not found or could not be processed.")
-            QMessageBox.information(self, "Load User Settings", "Could not find usersettings.javsave. Check console for details.")
-            self.save_button.setEnabled(False)
-            self.changes_made_in_current_config = False
-            self.reset_changes_button.setEnabled(False)
-            self.current_usersettings_root = None
-            self.current_usersettings_filepath = None
+                self.current_usersettings_filepath = None
+        finally:
+            self.config_tree_widget.blockSignals(False)
 
     
     def perform_backup(self):
@@ -463,12 +487,13 @@ class MainWindow(QMainWindow):
             self.save_button.setEnabled(False)
             self.changes_made_in_current_config = False
             self.reset_changes_button.setEnabled(False)
-            self.label.setText("Backup restored. Load a config file.")
+            self.action_status_label.setText("Backup restored. Load a config file to view.")
+            self.status_label.setText("Settings restored successfully from backup.")
 
         except Exception as e:
             QMessageBox.critical(self, "Restore Failed", f"An error occurred during restore: {e}\nCheck the New World config directory manually.")
+            self.status_label.setText("Restore failed. Check console. Config directory may be affected.")
             print(f"Error during restore: {e}")
-            self.label.setText("Restore failed. Check console. Config directory may be affected.")
 
     def handle_item_changed(self, item: QTreeWidgetItem, column: int):
         """
@@ -485,7 +510,7 @@ class MainWindow(QMainWindow):
                 print(f"Updated rebind action '{action_description}' to '{new_value}' in memory.")
                 self.changes_made_in_current_config = True
                 self.reset_changes_button.setEnabled(True)
-                self.label.setText("Changes made. Click 'Save' or 'Reset'.")
+                self.status_label.setText("Changes made. Click 'Save Current Config' or 'Reset Current Changes'.")
             elif item_id in self.item_id_to_usersetting_element:
                 usersetting_element = self.item_id_to_usersetting_element[item_id]
                 new_value_text = item.text(1)
@@ -508,7 +533,7 @@ class MainWindow(QMainWindow):
                 print(f"Updated user setting '{field_name}' to '{new_value_text.strip()}' in memory.")
                 self.changes_made_in_current_config = True
                 self.reset_changes_button.setEnabled(True)
-                self.label.setText("Changes made. Click 'Save' or 'Reset'.")
+                self.status_label.setText("Changes made. Click 'Save Current Config' or 'Reset Current Changes'.")
 
     def handle_color_editor_changed(self, item: QTreeWidgetItem, new_rgba_floats: tuple):
         """Handles changes from the ColorEditorWidget."""
@@ -523,7 +548,7 @@ class MainWindow(QMainWindow):
             print(f"Updated user setting (color) '{field_name}' to '{new_value_str}' in memory via sliders.")
             self.changes_made_in_current_config = True
             self.reset_changes_button.setEnabled(True)
-            self.label.setText("Color changes made. Click 'Save' or 'Reset'.")
+            self.status_label.setText("Color changes made. Click 'Save Current Config' or 'Reset Current Changes'.")
             # Update the icon preview
             pixmap_preview = QPixmap(16,16)
             color = QColor(int(new_rgba_floats[0]*255), int(new_rgba_floats[1]*255), int(new_rgba_floats[2]*255), int(new_rgba_floats[3]*255))
@@ -550,7 +575,8 @@ class MainWindow(QMainWindow):
         elif self.current_usersettings_filepath is not None: # Case: user settings file found but failed to parse
             self.handle_load_user_settings(prompt_for_backup=False)
         else:
-            self.label.setText("Could not determine which configuration to reset.")
+            self.status_label.setText("Could not determine which configuration to reset.")
+            self.action_status_label.setText("Reset failed: No active configuration.")
             # This state should ideally not be reached if the first check passed
             self.changes_made_in_current_config = False
             self.reset_changes_button.setEnabled(False)
@@ -563,7 +589,8 @@ class MainWindow(QMainWindow):
             success = self.config_parser.save_xml_config(self.current_rebindings_filepath, self.current_rebindings_root)
             if success:
                 QMessageBox.information(self, "Save Successful", f"Rebindings saved to:\n{self.current_rebindings_filepath}")
-                self.label.setText(f"Rebindings saved to {Path(self.current_rebindings_filepath).name}")
+                self.action_status_label.setText(f"Rebindings saved: {Path(self.current_rebindings_filepath).name}")
+                self.status_label.setText("Rebindings saved successfully.")
                 self.changes_made_in_current_config = False
                 self.reset_changes_button.setEnabled(False)
             else:
@@ -572,7 +599,8 @@ class MainWindow(QMainWindow):
             success = self.config_parser.save_xml_config(self.current_usersettings_filepath, self.current_usersettings_root)
             if success:
                 QMessageBox.information(self, "Save Successful", f"User settings saved to:\n{self.current_usersettings_filepath}")
-                self.label.setText(f"User settings saved to {Path(self.current_usersettings_filepath).name}")
+                self.action_status_label.setText(f"User settings saved: {Path(self.current_usersettings_filepath).name}")
+                self.status_label.setText("User settings saved successfully.")
                 self.changes_made_in_current_config = False
                 self.reset_changes_button.setEnabled(False)
             else:
