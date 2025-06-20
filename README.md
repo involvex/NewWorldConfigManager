@@ -1,7 +1,7 @@
 # New World Config Manager
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/involvex/ina-discord-bot/main/logo.png" alt="New World Config Manager Logo" width="150"/>
+  <img src="https://raw.githubusercontent.com/YOUR_USERNAME/NeWWorld-Config-Manager/main/newworld_config_manager/ui/assets/logo.png" alt="New World Config Manager Logo" width="150"/>
 </p>
 
 **New World Config Manager** is a desktop application created by Involvex, designed to help you easily manage, edit, backup, and restore your New World game configuration files. It provides a user-friendly interface for handling complex XML settings, including key rebindings and various user preferences like UI colors.
@@ -44,10 +44,10 @@
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/YOUR_USERNAME/NeWWorld-Config-Manager.git
+    git clone https://github.com/Involvex/NeWWorld-Config-Manager.git
     cd NeWWorld-Config-Manager
     ```
-    *(Replace `YOUR_USERNAME/NeWWorld-Config-Manager.git` with the actual URL of your repository once it's on GitHub.)*
+    *(Replace `Involvex/NeWWorld-Config-Manager.git` with the actual URL of your repository once it's on GitHub.)*
 
 2.  **Install dependencies:**
     It's recommended to use a virtual environment.
