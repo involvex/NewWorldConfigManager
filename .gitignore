@@ -10,7 +10,6 @@ __pycache__/
 .Python
 build/
 develop-eggs/
-dist/
 downloads/
 eggs/
 .eggs/
@@ -74,3 +73,6 @@ dmypy.json
 
 # Pyright
 .pyright/
+
+NewWorld_config_manager_v1.0.0_dist.zip
+*.zip
