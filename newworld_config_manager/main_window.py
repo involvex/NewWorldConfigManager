@@ -71,10 +71,6 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.setWindowTitle("New World Config Manager - by Involvex")
         self.setGeometry(100, 100, 800, 600)  # Increased size for tree view
-        
-        # Set window icon
-        icon_path = Path(__file__).parent / "ui" / "assets" / "logo.png"
-        self.setWindowIcon(QIcon(str(icon_path)))
 
         self.config_parser = ConfigParser()
         self.current_rebindings_root: ET.Element | None = None # To store the loaded XML root
