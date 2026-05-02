@@ -38,7 +38,9 @@ def run_app():
 
     # Load the stylesheet from an external file for better maintainability.
     # Use the resource_path helper to find it correctly.
-    stylesheet = load_stylesheet(resource_path("assets/stylesheet.qss"))
+    stylesheet = load_stylesheet(
+        resource_path("newworld_config_manager/ui/assets/stylesheet.qss")
+    )
     if stylesheet:
         app.setStyleSheet(stylesheet)
 
@@ -46,7 +48,9 @@ def run_app():
 
     # Set the icon for the application window itself (taskbar, title bar)
     # Use the resource_path helper to find the icon correctly.
-    window.setWindowIcon(QIcon(resource_path("assets/icon.ico")))
+    window.setWindowIcon(
+        QIcon(resource_path("newworld_config_manager/ui/assets/icon.ico"))
+    )
 
     window.show()
     sys.exit(app.exec())

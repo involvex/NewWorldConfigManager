@@ -1,6 +1,6 @@
 [project]
 name = "newworld-config-manager"
-version = "1.0.0"
+version = "1.1.0"
 description = "PyQt6 desktop app for editing New World game config files"
 readme = "README.md"
 requires-python = ">=3.9"
@@ -26,7 +26,7 @@ classifiers = [
 dependencies = [
     "pillow>=11.3.0",
     "pyinstaller>=6.20.0",
-    "PyQt6>=6.9.0",
+    "pyqt6>=6.10.2",
 ]
 
 [project.urls]
@@ -35,20 +35,8 @@ Documentation = "https://github.com/yourusername/NeWWorld-Config-Manager/wiki"
 Repository = "https://github.com/yourusername/NeWWorld-Config-Manager"
 Issues = "https://github.com/yourusername/NeWWorld-Config-Manager/issues"
 
-[build-system]
-requires = ["setuptools>=61.0", "wheel"]
-build-backend = "setuptools.build_meta"
-
 [uv.dependency-groups.dev]
 dev-dependencies = [
     "pyinstaller>=6.0.0",
     "pillow>=10.0.0",
 ]
-
-[tool.pyinstaller]
-# PyInstaller configuration via uv
-spec = "NewWorld Config Manager.spec"
-
-# Explicitly specify packages to avoid discovery issues
-[tool.setuptools]
-packages = ["newworld_config_manager"]
