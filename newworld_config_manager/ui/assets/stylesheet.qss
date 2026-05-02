@@ -1,0 +1,210 @@
+/* Dark Theme Stylesheet for New World Config Manager */
+
+QMainWindow {
+    background-color: #1a1a2e;
+    color: #e0e0e0;
+}
+
+QWidget {
+    background-color: #1a1a2e;
+    color: #e0e0e0;
+    selection-background-color: #16213e;
+    selection-color: #e94560;
+}
+
+QTreeWidget {
+    background-color: #16213e;
+    color: #e0e0e0;
+    border: 1px solid #0f3460;
+    border-radius: 4px;
+    gridline-color: #0f3460;
+    alternate-background-color: #0f3460;
+}
+
+QTreeWidget::item {
+    padding: 4px;
+    border-bottom: 1px solid #0f3460;
+}
+
+QTreeWidget::item:selected {
+    background-color: #e94560;
+    color: #ffffff;
+}
+
+QTreeWidget::item:hover {
+    background-color: #1a1a2e;
+    color: #e94560;
+}
+
+QHeaderView::section {
+    background-color: #0f3460;
+    color: #e94560;
+    padding: 4px;
+    border: 1px solid #16213e;
+    font-weight: bold;
+}
+
+QPushButton {
+    background-color: #0f3460;
+    color: #e0e0e0;
+    border: 1px solid #e94560;
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-weight: bold;
+    min-height: 28px;
+}
+
+QPushButton:hover {
+    background-color: #e94560;
+    color: #ffffff;
+    border-color: #e94560;
+}
+
+QPushButton:pressed {
+    background-color: #16213e;
+    border-color: #e94560;
+}
+
+QPushButton:disabled {
+    background-color: #1a1a2e;
+    color: #555555;
+    border-color: #333333;
+}
+
+QSlider::groove:horizontal {
+    border: 1px solid #0f3460;
+    height: 6px;
+    background: #16213e;
+    border-radius: 3px;
+}
+
+QSlider::sub-page:horizontal {
+    background: #e94560;
+    border: 1px solid #0f3460;
+    height: 6px;
+    border-radius: 3px;
+}
+
+QSlider::add-page:horizontal {
+    background: #16213e;
+    border: 1px solid #0f3460;
+    height: 6px;
+    border-radius: 3px;
+}
+
+QSlider::handle:horizontal {
+    background: #e94560;
+    border: 1px solid #ffffff;
+    width: 16px;
+    height: 16px;
+    margin: -5px 0;
+    border-radius: 8px;
+}
+
+QSlider::handle:horizontal:hover {
+    background: #ff6b8a;
+}
+
+QDoubleSpinBox {
+    background-color: #16213e;
+    color: #e0e0e0;
+    border: 1px solid #0f3460;
+    border-radius: 4px;
+    padding: 2px;
+    min-width: 60px;
+}
+
+QDoubleSpinBox::up-button {
+    subcontrol-origin: border;
+    subcontrol-position: top right;
+    width: 16px;
+    border-left: 1px solid #0f3460;
+}
+
+QDoubleSpinBox::down-button {
+    subcontrol-origin: border;
+    subcontrol-position: bottom right;
+    width: 16px;
+    border-left: 1px solid #0f3460;
+}
+
+QLabel {
+    color: #e0e0e0;
+    background-color: transparent;
+}
+
+QStatusBar {
+    background-color: #0f3460;
+    color: #e0e0e0;
+    border-top: 1px solid #16213e;
+}
+
+QMessageBox {
+    background-color: #1a1a2e;
+}
+
+QMessageBox QLabel {
+    color: #e0e0e0;
+}
+
+QMessageBox QPushButton {
+    min-width: 80px;
+}
+
+QFileDialog {
+    background-color: #1a1a2e;
+    color: #e0e0e0;
+}
+
+QGroupBox {
+    border: 1px solid #0f3460;
+    border-radius: 4px;
+    margin-top: 1ex;
+    color: #e94560;
+    font-weight: bold;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top center;
+    padding: 0 4px;
+}
+
+/* Scrollbar styling */
+QScrollBar:vertical {
+    border: none;
+    background: #16213e;
+    width: 12px;
+    margin: 0px;
+}
+
+QScrollBar::handle:vertical {
+    background: #0f3460;
+    min-height: 20px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #e94560;
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+QScrollBar:horizontal {
+    border: none;
+    background: #16213e;
+    height: 12px;
+    margin: 0px;
+}
+
+QScrollBar::handle:horizontal {
+    background: #0f3460;
+    min-width: 20px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:horizontal:hover {
+    background: #e94560;
+}

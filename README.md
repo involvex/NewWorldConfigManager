@@ -13,6 +13,7 @@
 * [Screenshots](#screenshots)
 * [Requirements](#requirements)
 * [Installation & Setup](#installation--setup)
+* [Building the Application](#building-the-application)
 * [How to Use](#how-to-use)
 * [File Structure](#file-structure)
 * [Troubleshooting](#troubleshooting)
@@ -53,61 +54,150 @@
 
 ## Requirements
 
-* Python 3.x (developed with 3.9+)
+* Windows 10/11 (64-bit)
+* Python 3.9+ (with `python` in PATH)
 * PyQt6
 
 ## Installation & Setup
 
+### Option 1: Run from Source (Development)
+
 1. **Clone the repository:**
 
-    ```bash
-    git clone https://github.com/involvex/NewWorldConfigManager.git
-    cd NewWorldConfigManager
-    ```
+   Open PowerShell and run:
 
-2. **Install dependencies:**
-    It's recommended to use a virtual environment.
+   ```powershell
+   git clone https://github.com/involvex/NewWorldConfigManager.git
+   cd NewWorldConfigManager
+   ```
 
-    ```bash
-    # Create and activate a virtual environment (optional but recommended)
-    # python -m venv venv
-    # source venv/bin/activate  # On Linux/macOS
-    # venv\Scripts\activate    # On Windows
+2. **Create a virtual environment (recommended):**
 
-    pip install -r requirements.txt
-    ```
+   ```powershell
+   python -m venv .venv
+   ```
 
-    *(Ensure you have a `requirements.txt` file with `PyQt6` listed.)*
+3. **Activate the virtual environment:**
 
-3. **Run the application:**
+   ```powershell
+   .\.venv\Scripts\Activate.ps1
+   ```
 
-    ```bash
-    python main.py
-    ```
+4. **Install dependencies:**
+
+   ```powershell
+   pip install -r requirements.txt
+   ```
+
+5. **Run the application:**
+
+   ```powershell
+   python main.py
+   ```
+
+### Option 2: Using the Build Script
+
+A PowerShell build script is provided to automate the process:
+
+1. Open PowerShell in the project directory.
+
+2. Run the build script with the `-Clean` flag to ensure a fresh build:
+
+   ```powershell
+   .\build.ps1 -Clean
+   ```
+
+   The first run will set up the virtual environment, install dependencies, and build the executable.
+
+3. The built executable will be in the `dist\` folder:
+
+   ```powershell
+   .\dist\NewWorld Config Manager.exe
+   ```
+
+### Cleaning Build Artifacts
+
+To remove all build artifacts and start fresh:
+
+```powershell
+.\clean.bat
+```
+
+This removes `dist\`, `build\`, `__pycache__` folders and `.pyc` files.
+
+## Building the Application
+
+The project uses **PyInstaller** to create a standalone Windows executable.
+
+### Prerequisites
+
+- Python 3.9+
+- pip
+- Git
+
+### Build Steps
+
+1. **Ensure you have a clean state:**
+
+   ```powershell
+   .\clean.bat
+   ```
+
+2. **Run the build script:**
+
+   ```powershell
+   .\build.ps1 -Clean
+   ```
+
+   The script will:
+   - Verify the virtual environment exists (or create it)
+   - Install dependencies
+   - Run PyInstaller with the project spec file
+   - Verify the output executable
+
+3. **Find the executable:**
+
+   ```
+   dist\NewWorld Config Manager.exe
+   ```
+
+### Build Script Options
+
+```powershell
+.\build.ps1              # Normal build
+.\build.ps1 -Clean       # Clean before building
+.\build.ps1 -NoBuild     # Setup only (no PyInstaller)
+```
 
 ## How to Use
 
-1. **Launch the Application:** Run `python main.py` from the project directory.
+1. **Launch the Application:** Run `python main.py` from the project directory (or use the built executable).
+
 2. **Load Configuration:**
-    * Click **"Load Rebindings Config"** to load and edit key bindings.
-    * Click **"Load User Settings (javsave)"** to load and edit general game settings.
-    * The application will prompt you to back up your settings before loading a configuration for the first time or when switching.
+   * Click **"Load Rebindings Config"** to load and edit key bindings.
+   * Click **"Load User Settings (javsave)"** to load and edit general game settings.
+   * The application will prompt you to back up your settings before loading a configuration for the first time or when switching.
+
 3. **Edit Settings:**
-    * **Rebindings:** In the tree view, double-click or select an item in the "Current Binding" column to edit its value.
-    * **User Settings:**
-        * For text/numeric values: Double-click or select an item in the "Value" column to edit.
-        * For color values (identified by a color swatch icon): Use the integrated R, G, B sliders and Alpha (A) spinbox that appear in the "Value" column. The color preview icon will update live.
+   * **Rebindings:** In the tree view, double-click or select an item in the "Current Binding" column to edit its value.
+   * **User Settings:**
+     * For text/numeric values: Double-click or select an item in the "Value" column to edit.
+     * For color values (identified by a color swatch icon): Use the integrated R, G, B sliders and Alpha (A) spinbox that appear in the "Value" column. The color preview icon will update live.
+
 4. **Save Changes:**
-    * Once you've made your desired changes, click **"Save Current Config"**. This will overwrite the original configuration file with your modifications. The "Reset Current Changes" button will become disabled.
+   * Once you've made your desired changes, click **"Save Current Config"**. This will overwrite the original configuration file with your modifications. The "Reset Current Changes" button will become disabled.
+
 5. **Reset Changes:**
-    * If you want to discard any modifications made since the last load or save, click **"Reset Current Changes"**. This will reload the configuration from disk.
+   * If you want to discard any modifications made since the last load or save, click **"Reset Current Changes"**. This will reload the configuration from disk.
+
 6. **Backup Settings:**
-    * Click **"Backup Settings Now"** to create a full backup of your New World configuration folder.
-    * Backups are timestamped and stored in the parent directory of your New World config folder (e.g., `.../AGS/New World_backup_YYYYMMDD_HHMMSS/`).
+   * Click **"Backup Settings Now"** to create a full backup of your New World configuration folder.
+   * Backups are timestamped and stored in the parent directory of your New World config folder (e.g., `.../AGS/New World_backup_YYYYMMDD_HHMMSS/`).
+
 7. **Restore from Backup:**
-    * Click **"Restore from Backup"**.
-    * You will be prompted to select a backup folder.
-    * Confirm the restore operation. **Caution:** This will overwrite your current live New World settings with the contents of the selected backup.
+   * Click **"Restore from Backup"**.
+   * You will be prompted to select a backup folder.
+   * Confirm the restore operation. **Caution:** This will overwrite your current live New World settings with the contents of the selected backup.
 
 ## File Structure
 
@@ -115,24 +205,40 @@
 NeWWorld-Config-Manager/
 ├── newworld_config_manager/    # Main application package
 │   ├── ui/                     # UI related files (widgets, assets)
-│   │   ├── assets/             # Image assets, etc.
+│   │   ├── assets/             # Image assets, stylesheet
 │   │   └── __init__.py
 │   ├── __init__.py
 │   ├── config_parser.py        # Logic for finding, loading, saving, backing up configs
 │   └── main_window.py          # Main application window and UI logic
 ├── main.py                     # Entry point of the application
 ├── README.md                   # This file
+├── build.ps1                   # PowerShell build script (Windows)
+├── clean.bat                   # Batch file to clean build artifacts
 ├── requirements.txt            # Python package dependencies
-└── .gitignore                  # Specifies intentionally untracked files that Git should ignore
+└── .gitignore                  # Specifies intentionally untracked files
 ```
 
 ## Troubleshooting
 
-* **"New World config directory not found":**
-  * Ensure New World has been run at least once to create its configuration files.
-  * The application primarily looks for the standard Windows path (`%APPDATA%/AGS/New World`). If your configuration is in a non-standard location (e.g., due to Proton on Linux, or a custom install), the tool might not find it automatically. Future versions may allow manual path specification.
-* **"Failed to parse usersettings.javsave as XML":**
-  * While `usersettings.javsave` often contains XML-like data, it might not always be perfectly valid XML or could be corrupted. If parsing fails, you might not be able to edit it with this tool. Restoring from a game backup or an older backup made by this tool might help.
+### "New World config directory not found":
+* Ensure New World has been run at least once to create its configuration files.
+* The application primarily looks for the standard Windows path (`%APPDATA%/AGS/New World`). If your configuration is in a non-standard location (e.g., due to Proton on Linux, or a custom install), the tool might not find it automatically.
+
+### "Failed to parse usersettings.javsave as XML":
+* While `usersettings.javsave` often contains XML-like data, it might not always be perfectly valid XML or could be corrupted. If parsing fails, you might not be able to edit it with this tool. Restoring from a game backup or an older backup made by this tool might help.
+
+### Build Failures
+* **Error: .venv not found** - Create a virtual environment: `python -m venv .venv`
+* **Error: Cannot activate venv** - Run `Set-ExecutionPolicy RemoteSigned -Scope CurrentUser` in PowerShell if execution policy blocks script activation.
+* **PyInstaller errors** - Ensure all dependencies in `requirements.txt` are installed and up to date.
+* **Missing stylesheet warning** - The build script should handle this automatically. The stylesheet is bundled via PyInstaller.
+
+### Running on PowerShell
+If you encounter execution policy errors:
+```powershell
+Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+Then run the build script again.
 
 ## Disclaimer
 
