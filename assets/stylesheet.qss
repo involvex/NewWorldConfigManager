@@ -1,99 +1,254 @@
-/* New World Themed Stylesheet */
-/* Font suggestion: For a more thematic feel, you could try fonts like "Cinzel", "Trajan Pro", */
-/* or a readable serif like "Georgia". Ensure the font is installed on the user's system. */
-/* For now, we'll stick to common sans-serif fonts for broad compatibility and UI clarity. */
+/* New World Themed Stylesheet - Modernized UI */
+/* Updated with improved contrast, spacing, and visual hierarchy */
+
 QWidget {
-    background-color: #282c34; /* Dark bluish-grey */
-    color: #abb2bf; /* Light grey text */
-    font-family: "Segoe UI", "Helvetica Neue", sans-serif; /* Common sans-serif fonts */
-    font-size: 10pt;
+    background-color: #1e2127; /* Darker background for better contrast */
+    color: #d0d0d0; /* Lighter text for improved readability */
+    font-family: "Segoe UI", "Helvetica Neue", sans-serif;
+    font-size: 9pt;
 }
 
 QMainWindow {
-    background-color: #282c34; /* Consistent with QWidget */
+    background-color: #1e2127;
 }
 
 QLabel {
-    color: #abb2bf; /* Consistent with QWidget */
-    background-color: transparent; /* Ensure labels don't have their own background unless specified */
+    color: #d0d0d0;
+    background-color: transparent;
 }
 
+/* Enhanced Button Styling */
 QPushButton {
-    background-color: #4682B4; /* SteelBlue */
-    color: #ffffff; /* White text for contrast */
-    border: 1px solid #3671a3; /* Darker blue border */
-    padding: 5px 10px;
-    border-radius: 3px;
+    background-color: #2a2f3a; /* Slightly lighter than background */
+    color: #ffffff;
+    border: 1px solid #3a4250;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: 500;
+    min-height: 20px;
 }
 
 QPushButton:hover {
-    background-color: #5a9bd4; /* Lighter SteelBlue */
+    background-color: #353d4c;
+    border-color: #4a5465;
 }
 
 QPushButton:pressed {
-    background-color: #3671a3; /* Darker SteelBlue */
+    background-color: #212631;
+    border-color: #2e384a;
 }
 
 QPushButton:disabled {
-    background-color: #3a3f4b; /* Desaturated dark blue-grey */
-    color: #7f848e; /* Desaturated text */
-    border-color: #30343d;
+    background-color: #1e2127;
+    color: #6a6f7a;
+    border-color: #2a3240;
 }
 
+/* Primary Action Buttons (Save, Load, etc.) */
+QPushButton[objectName="primaryButton"] {
+    background-color: #0d7377; /* Teal accent color */
+    border-color: #0a5e62;
+}
+
+QPushButton[objectName="primaryButton"]:hover {
+    background-color: #148b90;
+    border-color: #0f767b;
+}
+
+QPushButton[objectName="primaryButton"]:pressed {
+    background-color: #0a5e62;
+    border-color: #084b4f;
+}
+
+/* Tree Widget Improvements */
 QTreeWidget {
-    background-color: #21252b; /* Slightly darker than main bg */
-    color: #abb2bf; /* Light grey text */
-    border: 1px solid #3c4049; /* Border matching the theme */
-    selection-background-color: #d4af37; /* Metallic Gold for selection */
-    selection-color: #1c1f24; /* Dark text on gold selection for contrast */
+    background-color: #252a35;
+    alternate-background-color: #2c3240;
+    color: #d0d0d0;
+    border: 1px solid #3a4250;
+    border-radius: 4px;
+    outline: 0; /* Remove focus outline */
+    selection-background-color: #0d7377; /* Teal selection */
+    selection-color: #ffffff;
+    show-decoration-selected: 1; /* Show selection on all columns */
+}
+
+QTreeWidget::item {
+    padding: 4px;
+    border-bottom: 1px solid #2a3240;
+}
+
+QTreeWidget::item:selected {
+    background-color: #0d7377;
+    color: #ffffff;
+}
+
+QTreeWidget::item:hover:!selected {
+    background-color: #2c3240;
 }
 
 QHeaderView::section {
-    background-color: #3c4049; /* Medium dark grey-blue */
-    color: #e0e6f1; /* Light blueish-white text */
-    padding: 4px;
-    border: 1px solid #4a505a; /* Header border */
+    background-color: #2a3240;
+    color: #e0e6f1;
+    padding: 8px 4px;
+    border: 1px solid #3a4250;
     border-bottom: none;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 8pt;
 }
 
+/* Enhanced Slider Styling */
 QSlider::groove:horizontal {
-    border: 1px solid #3c4049; /* Thematic border */
-    height: 8px; /* the groove expands to the size of the slider */
-    background: #21252b; /* Background matching tree */
-    margin: 2px 0;
-    border-radius: 4px;
+    border: 1px solid #3a4250;
+    height: 10px;
+    background: #252a35;
+    margin: 4px 0;
+    border-radius: 5px;
 }
 
 QSlider::handle:horizontal {
-    background: #d4af37; /* Metallic Gold handle */
-    border: 1px solid #b89028; /* Darker Gold border for handle */
-    width: 18px;
-    margin: -5px 0; /* handle is placed vertically centered to the groove */
-    border-radius: 9px;
+    background: #0d7377; /* Teal handle */
+    border: 1px solid #0a5e62;
+    width: 20px;
+    margin: -6px 0;
+    border-radius: 10px;
 }
 
+QSlider::handle:horizontal:hover {
+    background: #148b90;
+    border-color: #0f767b;
+}
+
+QSlider::handle:horizontal:pressed {
+    background: #0a5e62;
+    border-color: #084b4f;
+}
+
+/* Enhanced Double Spin Box */
 QDoubleSpinBox {
-    background-color: #21252b; /* Consistent with tree/slider groove */
-    color: #abb2bf; /* Light grey text */
-    border: 1px solid #3c4049; /* Thematic border */
-    padding: 2px;
-    border-radius: 3px;
+    background-color: #252a35;
+    color: #d0d0d0;
+    border: 1px solid #3a4250;
+    padding: 4px 8px;
+    border-radius: 4px;
+    selection-background-color: #0d7377;
+    selection-color: #ffffff;
 }
 
+QDoubleSpinBox::up-button, QDoubleSpinBox::down-button {
+    width: 16px;
+    border: none;
+    background-color: #2a3240;
+}
+
+QDoubleSpinBox::up-button:hover, QDoubleSpinBox::down-button:hover {
+    background-color: #353d4c;
+}
+
+QDoubleSpinBox::up-arrow {
+    width: 8px;
+    height: 8px;
+}
+
+QDoubleSpinBox::down-arrow {
+    width: 8px;
+    height: 8px;
+}
+
+/* Status Bar Enhancements */
 QStatusBar {
-    background-color: #1c1f24; /* Very dark background for status bar */
-    color: #9da5b3; /* Muted text for status bar */
-    border-top: 1px solid #323840; /* Subtle top border */
+    background-color: #1a1e26;
+    color: #b0b5c1;
+    border-top: 1px solid #2a3240;
+    font-size: 8pt;
 }
 
 QStatusBar::item {
-    border: none; /* Remove border between status bar items */
+    border: none;
 }
 
+/* Tooltip Improvements */
 QToolTip {
-    background-color: #323840; /* Dark grey-blue, similar to header */
-    color: #c8cdd4;           /* Light grey text */
-    border: 1px solid #4a505a; /* Consistent border */
-    padding: 3px;
-    /* opacity: 230; */ /* Opacity can be tricky with QToolTip, often ignored */
+    background-color: #2a3240;
+    color: #e0e6f1;
+    border: 1px solid #3a4250;
+    padding: 6px;
+    border-radius: 4px;
+    font-size: 8pt;
+}
+
+/* Message Box Styling */
+QMessageBox {
+    background-color: #1e2127;
+    color: #d0d0d0;
+}
+
+QMessageBox QLabel {
+    color: #d0d0d0;
+}
+
+QMessageBox QPushButton {
+    min-width: 80px;
+}
+
+/* Progress Bar (if needed in future) */
+QProgressBar {
+    border: 1px solid #3a4250;
+    border-radius: 4px;
+    text-align: center;
+    background-color: #252a35;
+    color: #d0d0d0;
+}
+
+QProgressBar::chunk {
+    background-color: #0d7377;
+    border-radius: 3px;
+}
+
+/* Group Box Styling */
+QGroupBox {
+    border: 1px solid #3a4250;
+    border-radius: 6px;
+    margin-top: 16px;
+    padding-top: 16px;
+    font-weight: 600;
+    color: #d0d0d0;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    left: 12px;
+    padding: 0 4px;
+    background-color: #1e2127;
+}
+
+/* Tab Widget (if used in future) */
+QTabWidget::pane {
+    border: 1px solid #3a4250;
+    border-radius: 4px;
+    background-color: #252a35;
+}
+
+QTabBar::tab {
+    background-color: #2a3240;
+    color: #b0b5c1;
+    border: 1px solid #3a4250;
+    padding: 8px 16px;
+    margin-right: 2px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+QTabBar::tab:selected {
+    background-color: #252a35;
+    color: #d0d0d0;
+    border-bottom-color: #252a35;
+}
+
+QTabBar::tab:hover:!selected {
+    background-color: #353d4c;
+    color: #e0e6f1;
 }

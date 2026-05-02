@@ -13,21 +13,35 @@ REM ====================================================================
 echo.
 echo STEP 1: Installing Python dependencies
 echo ====================================================================
-if not exist "requirements.txt" (
-    echo WARNING: "requirements.txt" not found. Skipping dependency installation.
-    echo It is recommended to have a requirements.txt file for reproducible builds.
-) else (
-    echo Installing dependencies from requirements.txt...
-    pip install -r requirements.txt
+if not exist "pyproject.toml" (
+    echo ERROR: "pyproject.toml" not found.
+    echo Please ensure pyproject.toml is present in the project root.
+    pause
+    exit /b 1
+)
+
+if not exist "uv.lock" (
+    echo uv.lock not found. Generating from pyproject.toml...
+    uv lock
     if !errorlevel! neq 0 (
         echo.
-        echo ERROR: Failed to install Python dependencies.
-        echo Please check your Python environment and requirements.txt.
+        echo ERROR: Failed to generate uv.lock.
+        echo Please check your pyproject.toml.
         pause
         exit /b 1
     )
-    echo Dependencies installed successfully.
 )
+
+echo Installing dependencies from uv.lock...
+uv sync
+if !errorlevel! neq 0 (
+    echo.
+    echo ERROR: Failed to install Python dependencies.
+    echo Please check your Python environment and uv.lock.
+    pause
+    exit /b 1
+)
+echo Dependencies installed successfully.
 
 REM ====================================================================
 echo.
@@ -58,8 +72,8 @@ if not exist %SPEC_FILE% (
     exit /b 1
 )
 
-echo Running PyInstaller...
-pyinstaller %SPEC_FILE%
+echo Running PyInstaller from UV environment...
+.venv\Scripts\pyinstaller.exe %SPEC_FILE%
 
 REM Check if PyInstaller succeeded
 if !errorlevel! neq 0 (

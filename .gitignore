@@ -75,5 +75,6 @@ dmypy.json
 .pyright/
 
 NewWorld_config_manager_v1.0.0_dist.zip
-*.zip*.log
+*.zip
+dist
 *.log
