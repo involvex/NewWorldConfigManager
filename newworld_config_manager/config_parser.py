@@ -8,6 +8,7 @@ import datetime
 # For INI-style CFG files, you might use configparser
 # import configparser
 
+
 class ConfigParser:
     def __init__(self):
         self.new_world_config_dir = self._get_new_world_config_dir()
@@ -19,7 +20,7 @@ class ConfigParser:
         Attempts to find the New World configuration directory.
         Default path: %APPDATA%/AGS/New World
         """
-        appdata_path = os.getenv('APPDATA')
+        appdata_path = os.getenv("APPDATA")
         if appdata_path:
             nw_config_path = Path(appdata_path) / "AGS" / "New World"
             if nw_config_path.is_dir():
@@ -33,7 +34,9 @@ class ConfigParser:
         # A common Proton path structure might be:
         # Path.home() / ".steam" / "steam" / "steamapps" / "compatdata" / "1063730" / "pfx" / "drive_c" / "users" / "steamuser" / "AppData" / "Roaming" / "AGS" / "New World"
         # This is complex and game/Proton version dependent. For now, we'll stick to the direct Windows path.
-        print(f"Could not automatically determine New World config directory using APPDATA.")
+        print(
+            f"Could not automatically determine New World config directory using APPDATA."
+        )
         # As a direct example for the user's request, but this should be dynamic
         # For development/testing with a known path:
         # specific_user_path = Path("C:/Users/lukas/AppData/Roaming/AGS/New World")
@@ -59,18 +62,19 @@ class ConfigParser:
 
     def save_xml_config(self, filepath: str, root_element: ET.Element) -> bool:
         """Saves an XML ElementTree root_element to the specified filepath."""
-        if root_element is None: # Check if root_element is None
+        if root_element is None:  # Check if root_element is None
             print("Error: No XML data to save.")
             return False
         try:
             tree = ET.ElementTree(root_element)
-            ET.indent(tree, space="  ", level=0) # For pretty printing
+            ET.indent(tree, space="  ", level=0)  # For pretty printing
             tree.write(filepath, encoding="utf-8", xml_declaration=True)
             print(f"Successfully saved XML to: {filepath}")
             return True
         except Exception as e:
             print(f"Error saving XML file {filepath}: {e}")
             return False
+
     def _find_latest_rebindings_file(self) -> str | None:
         if not self.new_world_config_dir:
             return None
@@ -124,11 +128,16 @@ class ConfigParser:
                 # Attempt to parse directly as XML
                 tree = ET.parse(javsave_path)
                 root = tree.getroot()
-                print(f"Successfully parsed usersettings.javsave as XML: {javsave_path}")
+                print(
+                    f"Successfully parsed usersettings.javsave as XML: {javsave_path}"
+                )
                 return str(javsave_path), root
             except ET.ParseError as e:
                 print(f"Error parsing usersettings.javsave as XML: {e}")
-                return str(javsave_path), None # Return path but None for root to indicate parsing failure
+                return (
+                    str(javsave_path),
+                    None,
+                )  # Return path but None for root to indicate parsing failure
             except Exception as e:
                 print(f"Error processing usersettings.javsave: {e}")
                 return None
@@ -159,4 +168,5 @@ class ConfigParser:
         except Exception as e:
             print(f"Error creating backup: {e}")
             return None
+
     # TODO: Add methods for CFG and "javsave" files
