@@ -1,7 +1,7 @@
 """Configuration parser for New World game settings.
 
 Handles loading, saving, and backing up New World configuration files
-including rebindings XML and user settings.
+including rebindings XML, user settings, and preload settings.
 """
 
 import xml.etree.ElementTree as ET
@@ -163,15 +163,49 @@ class ConfigParser:
             print(f"Error creating backup: {exc}")
             return None
 
-        backup_parent_dir = self.new_world_config_dir.parent
-        timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-        backup_folder_name = f"{self.new_world_config_dir.name}_backup_{timestamp}"
-        backup_path = backup_parent_dir / backup_folder_name
+    def load_preload_settings(self) -> dict[str, str] | None:
+        """Loads user_preload_settings.cfg as key=value pairs.
 
-        try:
-            shutil.copytree(self.new_world_config_dir, backup_path)
-            print(f"Successfully backed up config folder to: {backup_path}")
-            return str(backup_path)
-        except OSError as exc:
-            print(f"Error creating backup: {exc}")
+        Returns dict of settings or None if file not found.
+        """
+        if not self.new_world_config_dir:
+            print("Cannot load preload settings: config directory not found.")
             return None
+        cfg_path = Path(self.new_world_config_dir) / "user_preload_settings.cfg"
+        if not cfg_path.is_file():
+            print(f"user_preload_settings.cfg not found at: {cfg_path}")
+            return None
+        settings = {}
+        try:
+            with open(cfg_path, "r", encoding="utf-8") as f:
+                for line in f:
+                    line = line.strip()
+                    if line and not line.startswith("--"):
+                        if "=" in line:
+                            key, value = line.split("=", 1)
+                            settings[key.strip()] = value.strip()
+            print(f"Successfully loaded preload settings: {cfg_path}")
+            return settings
+        except OSError as exc:
+            print(f"Error reading preload settings: {exc}")
+            return None
+
+    def save_preload_settings(self, settings: dict[str, str]) -> bool:
+        """Saves user_preload_settings.cfg from key=value dict.
+
+        Returns True on success, False on failure.
+        """
+        if not self.new_world_config_dir:
+            print("Cannot save preload settings: config directory not found.")
+            return False
+        cfg_path = Path(self.new_world_config_dir) / "user_preload_settings.cfg"
+        try:
+            with open(cfg_path, "w", encoding="utf-8") as f:
+                f.write("-- User Preload Settings\n")
+                for key, value in settings.items():
+                    f.write(f"{key}={value}\n")
+            print(f"Successfully saved preload settings: {cfg_path}")
+            return True
+        except OSError as exc:
+            print(f"Error writing preload settings: {exc}")
+            return False

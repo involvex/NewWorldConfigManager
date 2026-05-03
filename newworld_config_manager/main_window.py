@@ -28,6 +28,7 @@ from .config_parser import ConfigParser
 @dataclass
 class _AppState:
     """Container for main window state references."""
+
     current_rebindings_root: ET.Element | None = None
     current_rebindings_filepath: str | None = None
     item_id_to_rebind_element: dict[int, ET.Element] = None
@@ -124,9 +125,7 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.central_widget)
         main_layout = QVBoxLayout(self.central_widget)
 
-        self.statusBar().addWidget(
-            QLabel("Welcome to New World Config Manager!"), 1
-        )
+        self.statusBar().addWidget(QLabel("Welcome to New World Config Manager!"), 1)
 
         created_by = QLabel("Created by Involvex")
         created_by.setAlignment(Qt.AlignmentFlag.AlignRight)
@@ -227,22 +226,18 @@ class MainWindow(QMainWindow):
                         action_row_item.flags() | Qt.ItemFlag.ItemIsEditable
                     )
                     action_row_item.setText(2, default_input_val)
-                    self.state.item_id_to_rebind_element[
-                        id(action_row_item)
-                    ] = rebind_element
+                    self.state.item_id_to_rebind_element[id(action_row_item)] = (
+                        rebind_element
+                    )
 
         for i in range(self.config_tree_widget.columnCount()):
             self.config_tree_widget.resizeColumnToContents(i)
         self.config_tree_widget.blockSignals(False)
 
-    def _populate_generic_xml_tree(
-        self, parent_item_or_tree, element: ET.Element
-    ):
+    def _populate_generic_xml_tree(self, parent_item_or_tree, element: ET.Element):
         """Recursively adds generic XML elements to QTreeWidget."""
         if element.tag == "Class" and "field" in element.attrib:
-            self._process_class_field_setting(
-                parent_item_or_tree, element
-            )
+            self._process_class_field_setting(parent_item_or_tree, element)
             return
 
         item = None
@@ -257,9 +252,7 @@ class MainWindow(QMainWindow):
                 item if item is not None else parent_item_or_tree, child_element
             )
 
-    def _process_class_field_setting(
-        self, parent_item_or_tree, element: ET.Element
-    ):
+    def _process_class_field_setting(self, parent_item_or_tree, element: ET.Element):
         """Process a Class element with a field attribute as a setting."""
         field_name = element.get("field")
         value = element.get("value", "")
@@ -298,27 +291,17 @@ class MainWindow(QMainWindow):
             editor_initial_rgba = (
                 parsed_rgba_floats if parsed_rgba_floats else (0.0, 0.0, 0.0, 1.0)
             )
-            self._setup_color_editor(
-                setting_item, element, editor_initial_rgba
-            )
+            self._setup_color_editor(setting_item, element, editor_initial_rgba)
         else:
             setting_item.setText(1, value)
-            setting_item.setFlags(
-                setting_item.flags() | Qt.ItemFlag.ItemIsEditable
-            )
+            setting_item.setFlags(setting_item.flags() | Qt.ItemFlag.ItemIsEditable)
 
-        self.state.item_id_to_usersetting_element[
-            id(setting_item)
-        ] = element
+        self.state.item_id_to_usersetting_element[id(setting_item)] = element
 
         for child_element in element:
-            self._populate_generic_xml_tree(
-                parent_item_or_tree, child_element
-            )
+            self._populate_generic_xml_tree(parent_item_or_tree, child_element)
 
-    def _setup_color_editor(
-        self, item, _element, initial_rgba_floats
-    ):
+    def _setup_color_editor(self, item, _element, initial_rgba_floats):
         """Set up color editor widget for a tree item.
 
         Args:
@@ -336,13 +319,10 @@ class MainWindow(QMainWindow):
         pixmap_preview.fill(q_color)
         item.setIcon(0, QIcon(pixmap_preview))
 
-        editor_widget = self.ColorEditorWidget(
-            initial_rgba_floats=initial_rgba_floats
-        )
+        editor_widget = self.ColorEditorWidget(initial_rgba_floats=initial_rgba_floats)
         self.config_tree_widget.setItemWidget(item, 1, editor_widget)
         editor_widget.color_changed_signal.connect(
-            lambda new_rgba, it=item:
-                self.handle_color_editor_changed(it, new_rgba)
+            lambda new_rgba, it=item: self.handle_color_editor_changed(it, new_rgba)
         )
 
     def _show_load_failure(self, status_msg, action_msg):
@@ -352,14 +332,42 @@ class MainWindow(QMainWindow):
         self.config_tree_widget.clear()
         self.config_tree_widget.setColumnCount(2)
         self.config_tree_widget.setHeaderLabels(["Name", "Value"])
-        QMessageBox.information(
-            self, "Load Failed", status_msg + " Check console."
-        )
+        QMessageBox.information(self, "Load Failed", status_msg + " Check console.")
         self.save_button.setEnabled(False)
         self.changes_made_in_current_config = False
         self.reset_changes_button.setEnabled(False)
         self.state.current_rebindings_root = None
         self.state.current_rebindings_filepath = None
+
+    def _load_preload_settings(self):
+        """Load preload settings and update UI."""
+        settings = self.config_parser.load_preload_settings()
+        if settings:
+            self.state.preload_settings = (
+                settings  # pylint: disable=attribute-defined-outside-init
+            )
+            self.preload_width.blockSignals(True)
+            self.preload_height.blockSignals(True)
+            self.preload_fullscreen.blockSignals(True)
+            self.preload_fullscreen_window.blockSignals(True)
+            self.preload_width.setValue(float(settings.get("r_Width", 1920)))
+            self.preload_height.setValue(float(settings.get("r_Height", 1080)))
+            self.preload_fullscreen.setValue(float(settings.get("r_Fullscreen", 1)))
+            self.preload_fullscreen_window.setValue(
+                float(settings.get("r_fullscreenWindow", 0))
+            )
+            self.preload_width.blockSignals(False)
+            self.preload_height.blockSignals(False)
+            self.preload_fullscreen.blockSignals(False)
+            self.preload_fullscreen_window.blockSignals(False)
+            self.preload_group.setEnabled(True)
+            self.preload_save_btn.setEnabled(False)
+            return True
+        return False
+
+    def _on_preload_changed(self):
+        """Mark preload settings as changed."""
+        self.preload_save_btn.setEnabled(True)
 
     def handle_load_rebindings(self, prompt_for_backup=True):
         """Handle loading rebindings configuration."""
@@ -391,6 +399,7 @@ class MainWindow(QMainWindow):
         self.state.current_usersettings_filepath = None
         self.state.item_id_to_usersetting_element.clear()
         self.config_tree_widget.clear()
+        self._clear_search()
 
         filepath = self.config_parser.find_latest_rebindings_file()
         if not filepath:
@@ -425,8 +434,7 @@ class MainWindow(QMainWindow):
             QMessageBox.warning(
                 self,
                 "Config Directory Error",
-                "New World config directory not found."
-                " Cannot load user settings.",
+                "New World config directory not found." " Cannot load user settings.",
             )
             return
 
@@ -450,6 +458,7 @@ class MainWindow(QMainWindow):
         self.state.current_rebindings_filepath = None
         self.state.item_id_to_rebind_element.clear()
         self.config_tree_widget.clear()
+        self._clear_search()
         self.state.item_id_to_usersetting_element.clear()
         self.config_tree_widget.setColumnCount(2)
         self.config_tree_widget.setHeaderLabels(["Name", "Value"])
@@ -486,9 +495,7 @@ class MainWindow(QMainWindow):
                     f"Successfully parsed {Path(javsave_path).name} as XML."
                 )
                 self.state.current_usersettings_root = root_element
-                self._populate_generic_xml_tree(
-                    self.config_tree_widget, root_element
-                )
+                self._populate_generic_xml_tree(self.config_tree_widget, root_element)
                 self.config_tree_widget.setColumnWidth(0, 250)
                 self.config_tree_widget.setColumnWidth(1, 350)
                 self.config_tree_widget.expandToDepth(1)
@@ -513,6 +520,9 @@ class MainWindow(QMainWindow):
                 self.state.current_usersettings_root = None
         finally:
             self.config_tree_widget.blockSignals(False)
+
+        # Load preload settings after loading user settings
+        self._load_preload_settings()
 
     def perform_backup(self):
         """Perform a backup of the config folder."""
@@ -549,8 +559,7 @@ class MainWindow(QMainWindow):
             QMessageBox.critical(
                 self,
                 "Restore Error",
-                "New World config directory not found."
-                " Cannot perform restore.",
+                "New World config directory not found." " Cannot perform restore.",
             )
             return
 
@@ -609,7 +618,9 @@ class MainWindow(QMainWindow):
             self.save_button.setEnabled(False)
             self.changes_made_in_current_config = False
             self.reset_changes_button.setEnabled(False)
-            self.action_status_label.setText("Backup restored. Load a config file to view.")
+            self.action_status_label.setText(
+                "Backup restored. Load a config file to view."
+            )
             self.status_label.setText("Settings restored successfully from backup.")
         except OSError as exc:
             QMessageBox.critical(
@@ -706,16 +717,22 @@ class MainWindow(QMainWindow):
         elif self.state.current_usersettings_filepath is not None:
             self.handle_load_user_settings(prompt_for_backup=False)
         else:
-            self.status_label.setText("Could not determine which configuration to reset.")
+            self.status_label.setText(
+                "Could not determine which configuration to reset."
+            )
             self.action_status_label.setText("Reset failed: No active configuration.")
             self.changes_made_in_current_config = False
             self.reset_changes_button.setEnabled(False)
 
     def handle_save_current_config(self):
         """Handle save current config request."""
-        if self.state.current_rebindings_root and self.state.current_rebindings_filepath:
+        if (
+            self.state.current_rebindings_root
+            and self.state.current_rebindings_filepath
+        ):
             success = self.config_parser.save_xml_config(
-                self.state.current_rebindings_filepath, self.state.current_rebindings_root
+                self.state.current_rebindings_filepath,
+                self.state.current_rebindings_root,
             )
             if success:
                 QMessageBox.information(
@@ -735,9 +752,13 @@ class MainWindow(QMainWindow):
                     "Save Failed",
                     "Failed to save rebindings. Check console for details.",
                 )
-        elif self.state.current_usersettings_root and self.state.current_usersettings_filepath:
+        elif (
+            self.state.current_usersettings_root
+            and self.state.current_usersettings_filepath
+        ):
             success = self.config_parser.save_xml_config(
-                self.state.current_usersettings_filepath, self.state.current_usersettings_root
+                self.state.current_usersettings_filepath,
+                self.state.current_usersettings_root,
             )
             if success:
                 QMessageBox.information(
